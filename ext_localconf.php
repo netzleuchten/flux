@@ -25,7 +25,12 @@ if (TYPO3_MODE === 'BE') {
 
 
 if (!(TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_INSTALL)) {
-	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['flux']['setup'] = unserialize($_EXTCONF);
+
+    if (version_compare(PHP_VERSION, '7.2', '<')) {
+        class_alias(\FluidTYPO3\Flux\Form\Container\SectionObject::class, 'FluidTYPO3\\Flux\\Form\\Container\\Object');
+    }
+
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['flux']['hooks'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['flux']['hooks'] ?? [];
 
     // Configure the CompatibilityRegistry so it will return the right values based on TYPO3 version:
     // PreviewView class name (expecting needed changes on TYPO3 8.6+)
